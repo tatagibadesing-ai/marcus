@@ -225,6 +225,7 @@ const faqItems = [
 export default function ComboPrfPage() {
   const heroRef = useRef(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [scrollUnlocked, setScrollUnlocked] = useState(false)
 
   useEffect(() => {
     const customCursor = document.querySelector("[data-custom-cursor]") as HTMLElement
@@ -247,11 +248,33 @@ export default function ComboPrfPage() {
       document.head.appendChild(style)
     }
 
+    // Scroll lock until 2 minutes of video watched
+    document.body.style.overflow = "hidden"
+    let watchedSeconds = 0
+    const watchInterval = setInterval(() => {
+      const playerEl = document.getElementById("vid-69c473bb5341b955f71d2407")
+      if (playerEl) {
+        const videoEl =
+          (playerEl as any).shadowRoot?.querySelector("video") ||
+          playerEl.querySelector("video")
+        if (videoEl && !videoEl.paused && !videoEl.ended) {
+          watchedSeconds += 1
+        }
+      }
+      if (watchedSeconds >= 120) {
+        document.body.style.overflow = ""
+        setScrollUnlocked(true)
+        clearInterval(watchInterval)
+      }
+    }, 1000)
+
     return () => {
       if (customCursor) customCursor.style.display = ""
       document.body.style.cursor = ""
       const style = document.getElementById(styleId)
       if (style) style.remove()
+      document.body.style.overflow = ""
+      clearInterval(watchInterval)
     }
   }, [])
 
@@ -264,6 +287,14 @@ export default function ComboPrfPage() {
 
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Scroll lock overlay */}
+      {!scrollUnlocked && (
+        <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-black/95 backdrop-blur-md border-t border-[#FFCD01]/30 px-4 py-3 flex items-center justify-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-[#FFCD01] animate-pulse" />
+          <span className="text-zinc-300 text-xs sm:text-sm font-medium">Assista ao vídeo por 2 minutos para continuar</span>
+        </div>
+      )}
+
       {/* Meta Pixel Code */}
       <Script id="facebook-pixel" strategy="afterInteractive">
         {`
@@ -298,7 +329,32 @@ export default function ComboPrfPage() {
       `}</style>
 
       {/* =========================================
-          SEÇÃO 1: HERO
+          SEÇÃO VSL & PROVA SOCIAL
+      ========================================= */}
+      <section className="py-20 lg:py-28 relative bg-[#0a0a0a]" style={goldBorderStyle}>
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl sm:text-4xl font-bold text-white mb-8 leading-tight">
+            Assista esse vídeo antes de tomar qualquer decisão sobre sua <GradientText>preparação para PRF</GradientText>
+          </h2>
+
+          <div className="w-full rounded-2xl overflow-hidden border border-[#FFCD01]/30 shadow-[0_0_50px_rgba(255,205,1,0.1)] mb-12">
+            <vturb-smartplayer id="vid-69c473bb5341b955f71d2407" style={{ display: "block", margin: "0 auto", width: "100%" }}></vturb-smartplayer>
+            <Script
+              src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
+              strategy="afterInteractive"
+            />
+          </div>
+
+          <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="mb-24 block">
+            <AnimatedGradientButton className="text-black font-bold px-10 py-5 w-full md:w-auto">
+              QUERO ACESSAR O COMBO PRF
+            </AnimatedGradientButton>
+          </a>
+        </div>
+      </section>
+
+      {/* =========================================
+          SEÇÃO 1: HERO (below VSL)
       ========================================= */}
       <motion.section
         ref={heroRef}
@@ -426,31 +482,9 @@ export default function ComboPrfPage() {
       </motion.section>
 
       {/* =========================================
-          SEÇÃO VSL & PROVA SOCIAL
+          PROVA SOCIAL
       ========================================= */}
       <section className="py-20 lg:py-28 relative bg-[#0a0a0a]" style={goldBorderStyle}>
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-4xl font-bold text-white mb-8 leading-tight">
-            Assista esse vídeo antes de tomar qualquer decisão sobre sua <GradientText>preparação para PRF</GradientText>
-          </h2>
-
-          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-[#FFCD01]/30 shadow-[0_0_50px_rgba(255,205,1,0.1)] bg-zinc-900 flex items-center justify-center relative mb-12 cursor-pointer hover:border-[#FFCD01]/60 transition-colors">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
-            <div className="relative z-20 flex flex-col items-center gap-4">
-              <span className="text-white font-medium text-[10px] tracking-[0.3em] uppercase opacity-70">
-                APERTAR PLAY (VSL)
-              </span>
-            </div>
-          </div>
-
-          <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="mb-24 block">
-            <AnimatedGradientButton className="text-black font-bold px-10 py-5 w-full md:w-auto">
-              QUERO ACESSAR O COMBO PRF
-            </AnimatedGradientButton>
-          </a>
-        </div>
-
-        {/* PROVA SOCIAL */}
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex justify-center mb-8">
             <Image
@@ -755,10 +789,10 @@ export default function ComboPrfPage() {
 
                 <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 flex items-center justify-between">
                   <div>
-                    <div className="text-2xl text-white tracking-tighter font-semibold">
-                      1.400<span className="text-[#FFCD01]">+</span>
+                    <div className="text-lg text-white tracking-tighter font-semibold uppercase">
+                      PMGO · PCGO · PRF
                     </div>
-                    <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Aprovados</div>
+                    <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">3 Concursos</div>
                   </div>
                   <div className="h-10 w-[1px] bg-white/20" />
                   <div className="text-right">
@@ -828,12 +862,13 @@ export default function ComboPrfPage() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-8 flex-grow whitespace-pre-line">{item.descricao}</p>
                   <div className="w-full h-px bg-[#504535] mb-5"></div>
                   <div className="flex items-center gap-3 mt-auto mb-4">
-                    <span className="text-zinc-500 line-through text-sm font-medium">{item.precoAntigo}</span>
                     <span className="text-xl">👉</span>
-                    <span className="text-white font-bold text-xl">R$ 0</span>
+                    <span className="text-white font-bold text-2xl">{item.precoAntigo}</span>
                   </div>
-                  <a href={item.link} target="_blank" rel="noopener noreferrer" className="block text-center text-xs font-bold text-[#FFCD01] uppercase tracking-wider border border-[#FFCD01]/30 rounded-lg py-2 hover:bg-[#FFCD01]/10 transition-colors">
-                    Comprar individual
+                  <a href={item.link} target="_blank" rel="noopener noreferrer" className="block">
+                    <AnimatedGradientButton className="w-full text-black font-extrabold px-6 py-3 text-sm shadow-[0_0_20px_rgba(255,205,1,0.25)]">
+                      COMPRAR INDIVIDUAL
+                    </AnimatedGradientButton>
                   </a>
                 </div>
               </motion.div>
@@ -1095,19 +1130,14 @@ export default function ComboPrfPage() {
                       <span className="text-zinc-500 line-through">{item.precoAntigo}</span>
                     </div>
                   ))}
-                  <div className="h-px bg-zinc-800 my-4" />
-                  <div className="flex items-center justify-between">
-                    <span className="text-zinc-400 text-sm">Total separado:</span>
-                    <span className="text-zinc-500 line-through text-lg">R$ 411,00</span>
-                  </div>
                 </div>
 
                 <div className="mb-8">
                   <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2">Seu investimento hoje:</p>
                   <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-5xl sm:text-6xl font-extrabold text-white">R$ 0</span>
+                    <span className="text-5xl sm:text-6xl font-extrabold text-white">R$ 297</span>
                   </div>
-                  <p className="text-[#FFCD01] text-sm font-medium mt-2">Acesso gratuito por tempo limitado</p>
+                  <p className="text-[#FFCD01] text-sm font-medium mt-2">Acesso imediato ao sistema completo</p>
                 </div>
 
                 <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="block">
