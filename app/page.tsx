@@ -305,22 +305,25 @@ export default function ComboPrfPage() {
       `}</style>
 
       {/* =========================================
-          SEÇÃO VSL & PROVA SOCIAL
+          SEÇÃO VSL
       ========================================= */}
-      <section className="py-20 lg:py-28 relative bg-[#0a0a0a]" style={goldBorderStyle}>
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-4xl font-bold text-white mb-8 leading-tight">
-            Assista esse vídeo antes de tomar qualquer decisão sobre sua <GradientText>preparação para PRF</GradientText>
-          </h2>
+      <section className="min-h-screen flex flex-col items-center justify-center bg-black px-4">
+        <h2 className="text-xl sm:text-3xl font-bold text-white mb-6 leading-tight text-center max-w-3xl">
+          Assista esse vídeo antes de tomar qualquer decisão sobre sua <GradientText>preparação para PRF</GradientText>
+        </h2>
 
-          <div className="w-full rounded-2xl overflow-hidden border border-[#FFCD01]/30 shadow-[0_0_50px_rgba(255,205,1,0.1)]">
-            <vturb-smartplayer id="vid-69c473bb5341b955f71d2407" style={{ display: "block", margin: "0 auto", width: "100%" }}></vturb-smartplayer>
-            <Script
-              src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
-              strategy="afterInteractive"
-            />
+        {/* Wrapper com aspect-ratio para evitar layout shift durante carregamento */}
+        <div className="w-full max-w-4xl">
+          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+            <div className="absolute inset-0 bg-zinc-900 rounded-xl overflow-hidden">
+              <vturb-smartplayer id="vid-69c473bb5341b955f71d2407" style={{ display: "block", width: "100%", height: "100%" }}></vturb-smartplayer>
+            </div>
           </div>
         </div>
+        <Script
+          src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
+          strategy="afterInteractive"
+        />
       </section>
 
       {/* Conteúdo liberado após 2 minutos de vídeo */}
