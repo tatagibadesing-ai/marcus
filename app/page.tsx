@@ -324,20 +324,22 @@ export default function ComboPrfPage() {
           src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
           strategy="afterInteractive"
         />
+
+        {/* CTA aparece abaixo do vídeo após 2 minutos */}
+        {showContent && (
+          <div className="mt-8 animate-in fade-in duration-700">
+            <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer">
+              <AnimatedGradientButton className="text-black font-bold px-10 py-5 w-full md:w-auto">
+                QUERO ACESSAR O COMBO PRF
+              </AnimatedGradientButton>
+            </a>
+          </div>
+        )}
       </section>
 
       {/* Conteúdo liberado após 2 minutos de vídeo */}
       {showContent && (
       <div className="animate-in fade-in duration-1000 slide-in-from-bottom-8">
-
-      {/* CTA logo abaixo do vídeo */}
-      <div className="bg-[#0a0a0a] py-10 text-center">
-        <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer">
-          <AnimatedGradientButton className="text-black font-bold px-10 py-5 w-full md:w-auto">
-            QUERO ACESSAR O COMBO PRF
-          </AnimatedGradientButton>
-        </a>
-      </div>
 
       {/* =========================================
           SEÇÃO 1: HERO (below VSL)
