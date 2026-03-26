@@ -225,7 +225,7 @@ const faqItems = [
 export default function ComboPrfPage() {
   const heroRef = useRef(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [scrollUnlocked, setScrollUnlocked] = useState(false)
+  const [showContent, setShowContent] = useState(false)
 
   useEffect(() => {
     const customCursor = document.querySelector("[data-custom-cursor]") as HTMLElement
@@ -248,33 +248,17 @@ export default function ComboPrfPage() {
       document.head.appendChild(style)
     }
 
-    // Scroll lock until 2 minutes of video watched
-    document.body.style.overflow = "hidden"
-    let watchedSeconds = 0
-    const watchInterval = setInterval(() => {
-      const playerEl = document.getElementById("vid-69c473bb5341b955f71d2407")
-      if (playerEl) {
-        const videoEl =
-          (playerEl as any).shadowRoot?.querySelector("video") ||
-          playerEl.querySelector("video")
-        if (videoEl && !videoEl.paused && !videoEl.ended) {
-          watchedSeconds += 1
-        }
-      }
-      if (watchedSeconds >= 120) {
-        document.body.style.overflow = ""
-        setScrollUnlocked(true)
-        clearInterval(watchInterval)
-      }
-    }, 1000)
+    // Libera o conteúdo abaixo do vídeo após 2 minutos (120.000ms)
+    const timer = setTimeout(() => {
+      setShowContent(true)
+    }, 120000)
 
     return () => {
       if (customCursor) customCursor.style.display = ""
       document.body.style.cursor = ""
       const style = document.getElementById(styleId)
       if (style) style.remove()
-      document.body.style.overflow = ""
-      clearInterval(watchInterval)
+      clearTimeout(timer)
     }
   }, [])
 
@@ -287,14 +271,6 @@ export default function ComboPrfPage() {
 
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Scroll lock overlay */}
-      {!scrollUnlocked && (
-        <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-black/95 backdrop-blur-md border-t border-[#FFCD01]/30 px-4 py-3 flex items-center justify-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-[#FFCD01] animate-pulse" />
-          <span className="text-zinc-300 text-xs sm:text-sm font-medium">Assista ao vídeo por 2 minutos para continuar</span>
-        </div>
-      )}
-
       {/* Meta Pixel Code */}
       <Script id="facebook-pixel" strategy="afterInteractive">
         {`
@@ -337,21 +313,28 @@ export default function ComboPrfPage() {
             Assista esse vídeo antes de tomar qualquer decisão sobre sua <GradientText>preparação para PRF</GradientText>
           </h2>
 
-          <div className="w-full rounded-2xl overflow-hidden border border-[#FFCD01]/30 shadow-[0_0_50px_rgba(255,205,1,0.1)] mb-12">
+          <div className="w-full rounded-2xl overflow-hidden border border-[#FFCD01]/30 shadow-[0_0_50px_rgba(255,205,1,0.1)]">
             <vturb-smartplayer id="vid-69c473bb5341b955f71d2407" style={{ display: "block", margin: "0 auto", width: "100%" }}></vturb-smartplayer>
             <Script
               src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
               strategy="afterInteractive"
             />
           </div>
-
-          <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="mb-24 block">
-            <AnimatedGradientButton className="text-black font-bold px-10 py-5 w-full md:w-auto">
-              QUERO ACESSAR O COMBO PRF
-            </AnimatedGradientButton>
-          </a>
         </div>
       </section>
+
+      {/* Conteúdo liberado após 2 minutos de vídeo */}
+      {showContent && (
+      <div className="animate-in fade-in duration-1000 slide-in-from-bottom-8">
+
+      {/* CTA logo abaixo do vídeo */}
+      <div className="bg-[#0a0a0a] py-10 text-center">
+        <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer">
+          <AnimatedGradientButton className="text-black font-bold px-10 py-5 w-full md:w-auto">
+            QUERO ACESSAR O COMBO PRF
+          </AnimatedGradientButton>
+        </a>
+      </div>
 
       {/* =========================================
           SEÇÃO 1: HERO (below VSL)
@@ -1307,6 +1290,8 @@ export default function ComboPrfPage() {
           </p>
         </div>
       </footer>
+      </div>
+      )}
     </main>
   )
 }
