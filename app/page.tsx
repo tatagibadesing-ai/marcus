@@ -189,10 +189,10 @@ const deliverables = [
 ]
 
 const authorityItems = [
-  "Anos de experiência com mais de 1.400 aprovações juntas",
+  "Anos de experiência e diversas aprovações",
   "Aprovado na PMGO, PCGO e PRF aos 19 anos",
   "Estudou praticamente só pelo celular e iPad",
-  "Mentores responsáveis pelo método que aprovou policiais no país inteiro",
+  "Mentor responsável pelo método que aprovou policiais no país inteiro",
 ]
 
 const faqItems = [
@@ -206,11 +206,11 @@ const faqItems = [
   },
   {
     pergunta: "Como funciona o acesso?",
-    resposta: "Após a confirmação, você recebe acesso imediato a todos os materiais: Resumo Estratégico, Anki com 1.600+ flashcards e o Guia Estratégico com filtros prontos.",
+    resposta: "Após a confirmação, você recebe todo o material em até 7 dias: Resumo Estratégico, Anki com 1.600+ flashcards e o Guia Estratégico com filtros prontos.",
   },
   {
     pergunta: "Por quanto tempo tenho acesso ao material?",
-    resposta: "O acesso é vitalício. Você pode estudar no seu ritmo, sem prazo para expirar.",
+    resposta: "Você tem 1 ano de acesso ao material. Importante: se não baixar os arquivos dentro desse período, perde o acesso. Faça o download assim que receber.",
   },
   {
     pergunta: "O material é atualizado?",
