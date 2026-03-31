@@ -192,7 +192,7 @@ const authorityItems = [
   "Anos de experiência e diversas aprovações",
   "Aprovado na PMGO, PCGO e PRF aos 19 anos",
   "Estudou praticamente só pelo celular e iPad",
-  "Mentor responsável pelo método que aprovou policiais no país inteiro",
+  "Professor responsável pelo método que aprovou policiais no país inteiro",
 ]
 
 const faqItems = [
@@ -206,7 +206,7 @@ const faqItems = [
   },
   {
     pergunta: "Como funciona o acesso?",
-    resposta: "Após a confirmação, você recebe todo o material em até 7 dias: Resumo Estratégico, Anki com 1.600+ flashcards e o Guia Estratégico com filtros prontos.",
+    resposta: "Após a confirmação, você recebe todo o material após alguns dias: Resumo Estratégico, Anki com 1.600+ flashcards e o Guia Estratégico com filtros prontos.",
   },
   {
     pergunta: "Por quanto tempo tenho acesso ao material?",
