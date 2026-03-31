@@ -206,7 +206,7 @@ const faqItems = [
   },
   {
     pergunta: "Como funciona o acesso?",
-    resposta: "Após a confirmação, você recebe todo o material após alguns dias: Resumo Estratégico, Anki com 1.600+ flashcards e o Guia Estratégico com filtros prontos.",
+    resposta: "Após a confirmação você recebe a primeira parte do material e após sete dias recebe o material completo.",
   },
   {
     pergunta: "Por quanto tempo tenho acesso ao material?",
