@@ -223,11 +223,17 @@ const faqItems = [
 // =========================================
 
 export default function ComboPrfPage() {
-  const heroRef = useRef(null)
+  const heroRef = useRef<HTMLElement>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [showContent, setShowContent] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
     const customCursor = document.querySelector("[data-custom-cursor]") as HTMLElement
     if (customCursor) {
       customCursor.style.display = "none"
@@ -260,14 +266,11 @@ export default function ComboPrfPage() {
       if (style) style.remove()
       clearTimeout(timer)
     }
-  }, [])
+  }, [mounted])
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  })
+  const { scrollYProgress } = useScroll()
 
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -50])
 
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -302,6 +305,62 @@ export default function ComboPrfPage() {
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
+
+        @keyframes heroOrb1 {
+          0%, 100% { transform: translate(0%, 0%) scale(1); opacity: 0.55; }
+          33% { transform: translate(8%, -12%) scale(1.15); opacity: 0.7; }
+          66% { transform: translate(-6%, 8%) scale(0.9); opacity: 0.45; }
+        }
+        @keyframes heroOrb2 {
+          0%, 100% { transform: translate(0%, 0%) scale(1); opacity: 0.4; }
+          33% { transform: translate(-10%, 10%) scale(1.2); opacity: 0.6; }
+          66% { transform: translate(12%, -6%) scale(0.85); opacity: 0.35; }
+        }
+        @keyframes heroOrb3 {
+          0%, 100% { transform: translate(0%, 0%) scale(1); opacity: 0.3; }
+          50% { transform: translate(5%, -8%) scale(1.1); opacity: 0.5; }
+        }
+        @keyframes heroGrid {
+          0% { opacity: 0.04; }
+          50% { opacity: 0.09; }
+          100% { opacity: 0.04; }
+        }
+        @keyframes heroNoise {
+          0% { transform: translate(0, 0); }
+          10% { transform: translate(-2%, -3%); }
+          20% { transform: translate(3%, 1%); }
+          30% { transform: translate(-1%, 4%); }
+          40% { transform: translate(4%, -2%); }
+          50% { transform: translate(-3%, 3%); }
+          60% { transform: translate(2%, -4%); }
+          70% { transform: translate(-4%, 1%); }
+          80% { transform: translate(1%, 3%); }
+          90% { transform: translate(3%, -1%); }
+          100% { transform: translate(0, 0); }
+        }
+        @keyframes heroPulse {
+          0%, 100% { opacity: 0; transform: scale(0.8); }
+          50% { opacity: 0.15; transform: scale(1); }
+        }
+
+        .hero-bg-orb1 {
+          animation: heroOrb1 12s ease-in-out infinite;
+        }
+        .hero-bg-orb2 {
+          animation: heroOrb2 16s ease-in-out infinite;
+        }
+        .hero-bg-orb3 {
+          animation: heroOrb3 9s ease-in-out infinite;
+        }
+        .hero-bg-grid {
+          animation: heroGrid 6s ease-in-out infinite;
+        }
+        .hero-bg-noise {
+          animation: heroNoise 0.4s steps(1) infinite;
+        }
+        .hero-bg-pulse {
+          animation: heroPulse 5s ease-in-out infinite;
+        }
       `}</style>
 
       {/* =========================================
@@ -316,14 +375,18 @@ export default function ComboPrfPage() {
         <div className="w-full max-w-4xl">
           <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
             <div className="absolute inset-0 bg-zinc-900 rounded-xl overflow-hidden">
-              <vturb-smartplayer id="vid-69c473bb5341b955f71d2407" style={{ display: "block", width: "100%", height: "100%" }}></vturb-smartplayer>
+              {mounted && (
+                <vturb-smartplayer id="vid-69c473bb5341b955f71d2407" style={{ display: "block", width: "100%", height: "100%" }}></vturb-smartplayer>
+              )}
             </div>
           </div>
         </div>
-        <Script
-          src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
-          strategy="afterInteractive"
-        />
+        {mounted && (
+          <Script
+            src="https://scripts.converteai.net/33a2c9eb-c966-45b1-8b36-227d94140e0e/players/69c473bb5341b955f71d2407/v4/player.js"
+            strategy="afterInteractive"
+          />
+        )}
 
         {/* CTA aparece abaixo do vídeo após 2 minutos */}
         {showContent && (
@@ -347,150 +410,158 @@ export default function ComboPrfPage() {
       <motion.section
         ref={heroRef}
         style={{ y: heroY }}
-        className="relative min-h-[85vh] md:min-h-screen flex items-start md:items-center overflow-hidden bg-black"
+        className="relative py-24 md:py-32 flex items-center justify-center bg-black overflow-hidden"
       >
-        {/* CONTAINER DA IMAGEM */}
-        <div className="absolute top-0 left-0 w-full z-0 h-[38vh] md:h-full md:inset-0">
-          <Image
-            src="/Herosectionimage.webp"
-            alt="Marcus - Combo PRF"
-            fill
-            className="object-cover object-[88%_center] scale-[0.95] translate-x-[-2%] md:scale-100 md:translate-x-0 lg:object-contain lg:object-right lg:scale-[1.10] lg:origin-right lg:translate-x-[5%] opacity-100"
-            priority
-            quality={100}
-          />
-          {/* Degradê Mobile */}
-          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black via-black/0 to-transparent md:hidden" />
-          {/* Degradê Desktop */}
-          <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black/0 via-black/0 to-transparent" />
-
-          {/* Floating Badges */}
-          <div className="absolute inset-0 z-10 pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: [0, -10, 0],
-                x: [0, 5, 0]
-              }}
-              transition={{
-                opacity: { delay: 0.8, duration: 0.6 },
-                scale: { delay: 0.8, duration: 0.6 },
-                y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                x: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-              }}
-              className="absolute top-[45%] right-[60%] md:right-[38%] bg-zinc-900/60 backdrop-blur-md px-3 py-1.5 md:px-6 md:py-3 rounded-md flex items-center gap-2 md:gap-3 shadow-2xl"
-            >
-              <Trophy weight="fill" className="w-3 h-3 md:w-5 md:h-5 text-[#FFCD01]" />
-              <span className="text-white text-[10px] md:text-xs font-bold uppercase tracking-widest whitespace-nowrap">19 ANOS</span>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: [0, 10, 0],
-                x: [0, -5, 0]
-              }}
-              transition={{
-                opacity: { delay: 1, duration: 0.6 },
-                scale: { delay: 1, duration: 0.6 },
-                y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
-                x: { duration: 5.5, repeat: Infinity, ease: "easeInOut" }
-              }}
-              className="absolute top-[42%] right-[5%] bg-zinc-900/60 backdrop-blur-md px-3 py-1.5 md:px-6 md:py-3 rounded-md flex items-center gap-2 md:gap-3 shadow-2xl"
-            >
-              <Trophy weight="fill" className="w-3 h-3 md:w-5 md:h-5 text-[#FFCD01]" />
-              <span className="text-white text-[10px] md:text-xs font-bold uppercase tracking-widest whitespace-nowrap">APROVADO PRF</span>
-            </motion.div>
-          </div>
-        </div>
+        {/* ── FUNDO ANIMADO ── */}
+        {/* Orb amarelo principal — centro-esquerda */}
+        <div
+          className="hero-bg-orb1 absolute left-[10%] top-[20%] w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(255,205,1,0.22) 0%, transparent 70%)", filter: "blur(60px)" }}
+        />
+        {/* Orb amarelo secundário — direita */}
+        <div
+          className="hero-bg-orb2 absolute right-[5%] bottom-[10%] w-[500px] h-[500px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(255,180,0,0.18) 0%, transparent 70%)", filter: "blur(80px)" }}
+        />
+        {/* Orb branco sutil — topo direita */}
+        <div
+          className="hero-bg-orb3 absolute right-[20%] top-[5%] w-[300px] h-[300px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)", filter: "blur(40px)" }}
+        />
+        {/* Pulso central */}
+        <div
+          className="hero-bg-pulse absolute inset-0 mx-auto my-auto w-[700px] h-[700px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(255,205,1,0.08) 0%, transparent 65%)", filter: "blur(30px)" }}
+        />
+        {/* Grid de linhas */}
+        <div
+          className="hero-bg-grid absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "linear-gradient(rgba(255,205,1,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,205,1,0.07) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+        {/* Vinheta nas bordas */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%)" }}
+        />
 
         {/* Fade inferior */}
-        <div className="absolute bottom-0 left-0 w-full h-24 md:h-48 bg-gradient-to-t from-black to-transparent pointer-events-none z-10" />
+        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent pointer-events-none z-10" />
 
         {/* CONTAINER PRINCIPAL */}
-        <div className="relative z-20 container mx-auto border-x border-white/5 bg-black/0 h-full">
-          <div className="px-4 sm:px-6 md:px-12 2xl:px-20 py-8 pt-[35vh] md:py-20 md:pt-20 pb-12 flex flex-col md:block items-center">
-            <motion.div
-              className="w-full md:max-w-2xl flex flex-col items-center md:items-start text-center md:text-left drop-shadow-xl"
-              initial="hidden"
-              animate="visible"
-              variants={containerVariants}
-            >
-              {/* Logo da Marca */}
-              <motion.div variants={itemVariants} className="mb-6">
-                <Image
-                  src="/logodamarca.webp"
-                  alt="Logo"
-                  width={140}
-                  height={40}
-                  className="h-8 md:h-10 w-auto"
-                />
-              </motion.div>
-
-              <motion.div
-                variants={itemVariants}
-                className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 backdrop-blur-sm rounded-md mb-4 md:mb-6"
-              >
-                <CalendarCheck className="w-4 h-4 text-[#FFCD01]" weight="fill" />
-                <span className="text-zinc-300 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
-                  Sistema Validado
-                </span>
-              </motion.div>
-
-              <motion.h1
-                variants={itemVariants}
-                className="text-2xl sm:text-3xl md:text-5xl leading-[1.1] mb-4 md:mb-6 drop-shadow-2xl tracking-tight font-bold"
-              >
-                Os Materiais de Estudos com Sistema Completo Para PRF Que Já Formou a Base da Preparação de Quem <GradientText>Saiu do Zero e Foi Aprovado</GradientText>
-              </motion.h1>
-
-              <motion.div variants={itemVariants} className="mb-6 md:mb-8 w-full max-w-xl md:max-w-3xl px-2 md:px-0">
-                <p className="text-zinc-200 text-sm sm:text-base lg:text-lg font-medium leading-relaxed mb-2 drop-shadow-md">
-                  Pare de estudar perdido. Aqui estão os materiais que ajudaram na preparação de um aprovado na PRF aos 19 anos.
-                </p>
-                <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">
-                  ✔ Resumo Estratégico &nbsp; ✔ Revisão Inteligente &nbsp; ✔ Questões Direcionadas <br/> Tudo organizado em um único sistema.
-                </p>
-              </motion.div>
-
-              <motion.div variants={itemVariants} className="mb-10 w-full flex justify-center md:justify-start">
-                <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-                  <AnimatedGradientButton className="w-full sm:w-auto text-black text-base sm:text-lg font-extrabold px-10 py-4 md:px-14 md:py-5 shadow-[0_0_30px_rgba(255,205,1,0.3)] hover:shadow-[0_0_60px_rgba(255,205,1,0.5)] border-2 border-white/20 whitespace-nowrap transition-all">
-                    QUERO ACESSAR O COMBO PRF
-                  </AnimatedGradientButton>
-                </a>
-              </motion.div>
+        <div className="relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6">
+          <motion.div
+            className="flex flex-col items-center text-center"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
+            {/* Logo da Marca */}
+            <motion.div variants={itemVariants} className="mb-8">
+              <Image
+                src="/logodamarca.webp"
+                alt="Logo"
+                width={140}
+                height={40}
+                className="h-10 w-auto"
+              />
             </motion.div>
-          </div>
+
+            <motion.div
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 backdrop-blur-sm rounded-md mb-6"
+            >
+              <CalendarCheck className="w-4 h-4 text-[#FFCD01]" weight="fill" />
+              <span className="text-zinc-300 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
+                Sistema Validado
+              </span>
+            </motion.div>
+
+            <motion.h1
+              variants={itemVariants}
+              className="text-3xl sm:text-4xl md:text-5xl leading-[1.1] mb-6 tracking-tight font-bold"
+            >
+              Os Materiais de Estudos com Sistema Completo Para PRF Que Já Formou a Base da Preparação de Quem <GradientText>Saiu do Zero e Foi Aprovado</GradientText>
+            </motion.h1>
+
+            <motion.div variants={itemVariants} className="mb-8 w-full max-w-2xl">
+              <p className="text-zinc-200 text-sm sm:text-base lg:text-lg font-medium leading-relaxed mb-3">
+                Pare de estudar perdido. Aqui estão os materiais que ajudaram na preparação de um aprovado na PRF aos 19 anos.
+              </p>
+              <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">
+                ✔ Resumo Estratégico &nbsp; ✔ Revisão Inteligente &nbsp; ✔ Questões Direcionadas <br/> Tudo organizado em um único sistema.
+              </p>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="mb-10 w-full flex justify-center">
+              <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <AnimatedGradientButton className="w-full sm:w-auto text-black text-base sm:text-lg font-extrabold px-10 py-4 md:px-14 md:py-5 shadow-[0_0_30px_rgba(255,205,1,0.3)] hover:shadow-[0_0_60px_rgba(255,205,1,0.5)] border-2 border-white/20 whitespace-nowrap transition-all">
+                  QUERO ACESSAR O COMBO PRF
+                </AnimatedGradientButton>
+              </a>
+            </motion.div>
+          </motion.div>
         </div>
       </motion.section>
 
       {/* =========================================
           PROVA SOCIAL
       ========================================= */}
-      <section className="py-20 lg:py-28 relative bg-[#0a0a0a]" style={goldBorderStyle}>
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex justify-center mb-8">
-            <Image
-              src="/prflogo.png.webp"
-              alt="Logo PRF"
-              width={120}
-              height={120}
-              className="h-20 md:h-24 w-auto opacity-80"
-            />
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6">
-            Pessoas Comuns <GradientText>já estão evoluindo</GradientText>
-          </h2>
-          <p className="text-zinc-400 mb-12 max-w-2xl mx-auto">
-            Resultados daqueles que pararam de tentar a sorte e começaram a estudar com método.
-          </p>
+      <section className="py-24 lg:py-36 relative bg-[#080808] overflow-hidden">
+        {/* Fundo: orb dourado central suave */}
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(255,205,1,0.06) 0%, transparent 70%)", filter: "blur(60px)" }}
+        />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
+
+          {/* Logo PRF integrada ao título */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center gap-5 mb-10"
+          >
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full blur-2xl opacity-40" style={{ background: "radial-gradient(circle, rgba(255,205,1,0.5), transparent)" }} />
+              <Image
+                src="/prflogo.png.webp"
+                alt="Logo PRF"
+                width={72}
+                height={72}
+                className="relative h-16 w-auto opacity-90 drop-shadow-[0_0_18px_rgba(255,205,1,0.35)]"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#FFCD01]/40" />
+              <span className="text-[#FFCD01]/70 text-[10px] font-bold uppercase tracking-[0.3em]">Resultados reais</span>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#FFCD01]/40" />
+            </div>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight"
+          >
+            Pessoas Comuns <GradientText>já estão evoluindo</GradientText>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-zinc-500 mb-16 max-w-xl mx-auto text-sm leading-relaxed"
+          >
+            Resultados de quem parou de tentar a sorte e começou a estudar com método.
+          </motion.p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { texto: "Comecei do zero e em 4 meses já estava acertando 80% das questões. O sistema realmente funciona.", autor: "Lucas R." },
               { texto: "Eu estudava sem rumo, gastando horas em matérias que nem caíam. Com o Combo PRF organizei tudo.", autor: "Amanda S." },
@@ -501,19 +572,27 @@ export default function ComboPrfPage() {
             ].map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-                className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 text-left hover:border-[#FFCD01]/20 transition-colors"
+                transition={{ delay: index * 0.07 }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="group relative bg-zinc-900/40 border border-white/[0.06] rounded-2xl p-6 text-left transition-all duration-300 hover:bg-zinc-900/70 hover:border-[#FFCD01]/15"
               >
-                <div className="flex gap-1 mb-3">
+                {/* Glow no hover */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: "radial-gradient(ellipse at top left, rgba(255,205,1,0.05), transparent 60%)" }} />
+
+                <div className="flex gap-0.5 mb-4">
                   {[...Array(5)].map((_, i) => (
                     <span key={i} className="text-[#FFCD01] text-sm">★</span>
                   ))}
                 </div>
-                <p className="text-zinc-300 text-sm leading-relaxed mb-4 italic">&ldquo;{item.texto}&rdquo;</p>
-                <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider">— {item.autor}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed mb-5 italic font-light">&ldquo;{item.texto}&rdquo;</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-px bg-[#FFCD01]/40" />
+                  <p className="text-zinc-500 text-[11px] font-semibold uppercase tracking-widest">{item.autor}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -836,13 +915,17 @@ export default function ComboPrfPage() {
                   background: "linear-gradient(210deg, #1B1B1B 0%, #010101 100%)",
                 }}
               >
-                <div className="h-48 w-full border-b border-[#504535]/30 flex items-center justify-center bg-zinc-900/50 relative overflow-hidden group-hover:bg-zinc-900/80 transition-colors">
-                  <div className="absolute inset-0 bg-[#FFCD01]/5 blur-2xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-700" />
-                  <item.icone
-                    weight="duotone"
-                    className="w-24 h-24 text-[#FFCD01] relative z-10 drop-shadow-[0_0_15px_rgba(210,169,63,0.3)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-                  />
-                  <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+                <div className="px-8 pt-8 pb-6 border-b border-white/[0.05] flex items-center gap-4 relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                    style={{ background: "radial-gradient(ellipse at top left, rgba(255,205,1,0.07), transparent 60%)" }} />
+                  <div className="relative flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: "rgba(255,205,1,0.1)", boxShadow: "0 0 0 1px rgba(255,205,1,0.15)" }}>
+                    <item.icone
+                      weight="duotone"
+                      className="w-6 h-6 text-[#FFCD01] drop-shadow-[0_0_8px_rgba(255,205,1,0.5)] transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="h-px flex-1 bg-gradient-to-r from-[#FFCD01]/20 to-transparent" />
                 </div>
 
                 <div className="p-8 flex flex-col flex-grow">
