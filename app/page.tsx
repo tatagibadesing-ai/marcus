@@ -641,7 +641,7 @@ export default function ComboPrfPage() {
                     backgroundClip: "text",
                   }}
                 >
-                  Reprova porque estuda perdido.
+                  Reprova porque estuda errado.
                 </span>
               </h2>
 
