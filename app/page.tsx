@@ -1208,7 +1208,6 @@ export default function ComboPrfPage() {
                   <div className="flex items-baseline justify-center gap-2">
                     <span className="text-5xl sm:text-6xl font-extrabold text-white">R$ 297</span>
                   </div>
-                  <p className="text-[#FFCD01] text-sm font-medium mt-2">Acesso imediato ao sistema completo</p>
                 </div>
 
                 <a href="https://pay.kiwify.com.br/0xIY097" target="_blank" rel="noopener noreferrer" className="block">
@@ -1219,7 +1218,6 @@ export default function ComboPrfPage() {
 
                 <div className="flex items-center justify-center gap-2 mt-6">
                   <LockKey className="w-4 h-4 text-zinc-500" />
-                  <span className="text-zinc-500 text-xs">Acesso imediato e seguro</span>
                 </div>
               </div>
             </div>
@@ -1354,7 +1352,7 @@ export default function ComboPrfPage() {
             </a>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-8">
-              {["Acesso Imediato", "Suporte Incluso", "Sem Risco"].map((text, i) => (
+              {["Suporte Incluso", "Sem Risco"].map((text, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#FFCD01]" weight="bold" />
                   <span className="text-zinc-400 text-sm">{text}</span>
