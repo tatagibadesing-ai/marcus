@@ -31,7 +31,8 @@ import {
   MapTrifold,
   LockKeyOpen,
   ChatCircleDots,
-  ArrowRight
+  ArrowRight,
+  WhatsappLogo
 } from "@phosphor-icons/react"
 
 // =========================================
@@ -1378,6 +1379,20 @@ export default function ComboPrfPage() {
       </footer>
       </div>
       )}
+
+      {/* Botão flutuante de WhatsApp */}
+      <a
+        href="https://wa.me/556681289655"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Fale conosco no WhatsApp"
+        className="fixed bottom-5 right-5 md:bottom-6 md:right-6 z-50 group"
+      >
+        <span className="absolute inset-0 rounded-full bg-[#25D366]/40 animate-ping" />
+        <span className="relative flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#25D366] hover:bg-[#1ebd5a] shadow-[0_8px_24px_rgba(37,211,102,0.45)] transition-all duration-300 hover:scale-110">
+          <WhatsappLogo weight="fill" className="w-7 h-7 md:w-8 md:h-8 text-white" />
+        </span>
+      </a>
     </main>
   )
 }
