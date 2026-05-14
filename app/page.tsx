@@ -1382,7 +1382,7 @@ export default function ComboPrfPage() {
 
       {/* Botão flutuante de WhatsApp */}
       <a
-        href="https://wa.me/556681289655"
+        href="https://wa.me/556681289655?text=Quero%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20material"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Fale conosco no WhatsApp"
